@@ -1,6 +1,8 @@
+using SudokuCore.Abstractions;
+
 namespace SudokuCore;
 
-public class Box : ICellCollection
+public struct Box : ICellCollection
 {
     private readonly Sudoku _sudoku;
     public (byte x, byte y) Location { get; }
@@ -19,5 +21,13 @@ public class Box : ICellCollection
         for (var i = y; i < ny; i++)
             for (var j = x; j < nx; j++)
                 yield return _sudoku.Cell(i, j);
+    }
+
+    public bool Accepts(byte value)
+        => Cells().All(c => c.Value != value);
+
+    public override string ToString()
+    {
+        return $"[{string.Join(" ", Cells().Select(x => x.Value))}]";
     }
 }

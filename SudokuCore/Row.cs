@@ -1,3 +1,5 @@
+using SudokuCore.Abstractions;
+
 namespace SudokuCore;
 
 public readonly struct Row : ICellCollection
@@ -29,6 +31,9 @@ public readonly struct Row : ICellCollection
                 throw new NotSupportedException($"Iteration of {_location.o} rows is not supported");
         }
     }
+
+    public bool Accepts(byte value)
+        => Cells().All(c => c.Value != value);
 
     public override string ToString()
     {
