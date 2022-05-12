@@ -35,15 +35,15 @@ public class BruteForceSolver : ISudokuSolver
         //Check each value in domain for the variable/cell (1 ... Size)
         for (byte i = 1; i <= _sudoku.Size; i++)
         {
-            if (_sudoku.Accepts(cell, i)) //if value fits, set it
+            if (cell.Accepts(i)) //if value fits, set it
             {
                 cell.Value = i;
-                //Solve next cell
+                //Recursively check if the value could lead to an outcome
                 if (SolveCell((byte)(x + 1), y))
                     return true;
             }
             
-            //could not hold, reset it to empty and try another value
+            //could not hold/does not lead to outcome from recursion, reset it to empty and try another value
             cell.Value = 0;
         }
 

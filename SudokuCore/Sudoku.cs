@@ -1,9 +1,12 @@
 using System.Text;
+using SudokuCore.Abstractions;
 
 namespace SudokuCore;
 
-public class Sudoku : ICloneable
+public class Sudoku : ICloneable, IDisposable
 {
+    //private const string CHARS = " 123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
     public readonly byte[,] Map;
     public List<Region> Regions { get; }
     public byte Size { get; }
@@ -93,15 +96,7 @@ public class Sudoku : ICloneable
         if (y > Size / BoxHeight) throw new IndexOutOfRangeException("Y is greater than the amount of boxes");
         return new Box(this, (y, x)); //for some reason, inverted
     }
-
-    public bool Accepts(Cell cell, byte value)
-    {
-        return cell.Value == value || cell.GetParentRow(Orientation.Horizontal).Accepts(value)
-            && cell.GetParentRow(Orientation.Vertical).Accepts(value)
-            && cell.GetParentBox().Accepts(value)
-            && cell.GetParentRegions().All(x => x.Accepts(value));
-    }
-
+    
     public string ToSingleLine()
     {
         var str = new StringBuilder();
@@ -139,6 +134,21 @@ public class Sudoku : ICloneable
         return str.ToString();
     }
 
+    public IEnumerable<byte> DomainValues()
+    {
+        for (byte i = 1; i <= Size; i++)
+            yield return i;
+    }
+
+    public IEnumerable<Cell> GetCells()
+    {
+        for (byte x = 0; x < Size; x++)
+        for (byte y = 0; y < Size; y++)
+        {
+            yield return Cell(x, y);
+        }
+    }
+
     public override bool Equals(object? obj)
     {
         if (obj is not Sudoku s) return false;
@@ -158,5 +168,9 @@ public class Sudoku : ICloneable
     public object Clone()
     {
         return FromString(ToSingleLine());
+    }
+
+    public void Dispose()
+    {
     }
 }

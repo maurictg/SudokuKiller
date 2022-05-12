@@ -2,7 +2,7 @@ using SudokuCore.Abstractions;
 
 namespace SudokuCore;
 
-public class Region : ICellCollection
+public abstract class Region : ICellCollection
 {
     private readonly Sudoku _sudoku;
     public List<(byte x, byte y)> Locations { get; }
@@ -16,6 +16,5 @@ public class Region : ICellCollection
     public IEnumerable<Cell> Cells() 
         => Locations.Select(l => new Cell(_sudoku, l));
 
-    public bool Accepts(byte value)
-        => Cells().All(c => c.Value != value);
+    public abstract bool Accepts(byte value);
 }

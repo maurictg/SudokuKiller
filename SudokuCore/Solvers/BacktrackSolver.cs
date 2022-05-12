@@ -8,53 +8,57 @@ public class BacktrackSolver : ISudokuSolver
     private readonly Sudoku _sudoku;
     private int _emptyChecks;
     private int _checks;
+    private int _backtracks;
 
     public BacktrackSolver(Sudoku sudoku)
     {
         _sudoku = sudoku;
     }
+    
+    private Cell? FindEmptyCell()
+    {
+        foreach (var cell in _sudoku.GetCells())
+        {
+            _emptyChecks++;
+            if(cell.IsEmpty)
+                return cell;
+        }
+        
+        return null;
+    }
 
     private bool SolveBacktrack()
     {
-        byte xRes = 0;
-        byte yRes = 0;
-        var empty = true;
+        //1. Find empty cell
+        var nextCell = FindEmptyCell();
         
-        for (byte x = 0; x < _sudoku.Size; x++)
-        {
-            for (byte y = 0; y < _sudoku.Size; y++)
-            {
-                _emptyChecks++;
-                if (_sudoku.Cell(x, y).IsEmpty)
-                {
-                    xRes = x;
-                    yRes = y;
-                    empty = false;
-                    break;
-                }
-            }
-            
-            if (!empty)
-                break;
-        }
-
-        if (empty)
+        //2. If no empty cells, soduku is solved
+        if (nextCell == null)
             return true;
-        
-        //Backtrack all rows/columns
-        for (byte num = 1; num <= _sudoku.Size; num++)
+
+        var cell = nextCell.Value;
+
+        //Try all values in domain
+        foreach (var num in _sudoku.DomainValues())
         {
-            var cell = _sudoku.Cell(xRes, yRes);
             _checks++;
-            if (_sudoku.Accepts(cell, num))
+            
+            //If value is possible, set value
+            if (cell.Accepts(num))
             {
                 cell.Value = num;
+                
+                //Try to solve the sudoku with the new value recursively
                 if (SolveBacktrack())
                     return true;
                 
+                //If sudoku can't be solved recursively this way, set cell back to empty
                 cell.Value = 0;
+                _backtracks++;
             }
         }
+        
+        //All possibilities tried, but no solution found
         return false;
     }
 
@@ -64,6 +68,6 @@ public class BacktrackSolver : ISudokuSolver
         if(!SolveBacktrack())
             throw new ArgumentException("Sudoku could not be solved: No solution exists");
 
-        Console.WriteLine($"Found BackTrack solution in {sw.Elapsed} and {_checks} checks + {_emptyChecks} empty checks");
+        Console.WriteLine($"Found BackTrack solution in {sw.Elapsed} and {_checks} checks + {_emptyChecks} empty checks, with {_backtracks} backtracks");
     }
 }

@@ -1,11 +1,16 @@
 namespace SudokuCore;
 
-public readonly struct Cell
+public struct Cell
 {
-    private readonly Sudoku _sudoku;
+    private Sudoku _sudoku;
     public (byte x, byte y) Location { get; }
 
     public bool IsEmpty => Value == 0;
+
+    public void SetRef(Sudoku s)
+    {
+        _sudoku = s;
+    }
 
     public byte Value
     {
@@ -15,6 +20,21 @@ public readonly struct Cell
 
     public Cell(Sudoku sudoku, (byte x, byte y) location)
         => (Location, _sudoku) = (location, sudoku);
+
+    public bool Accepts(byte value)
+    {
+        return Value == value || (GetParentRow(Orientation.Horizontal).Accepts(value)
+            && GetParentRow(Orientation.Vertical).Accepts(value)
+            && GetParentBox().Accepts(value)
+            && GetParentRegions().All(x => x.Accepts(value)));
+    }
+
+    public IEnumerable<byte> GetPossibleValues()
+    {
+        foreach (var v in _sudoku.DomainValues())
+            if (Accepts(v))
+                yield return v;
+    }
 
     public IEnumerable<Region> GetParentRegions()
     {
@@ -33,10 +53,13 @@ public readonly struct Cell
     }
 
     public Box GetParentBox()
-        => _sudoku.Box((byte)Math.Floor((double)Location.x / _sudoku.BoxWidth), (byte)Math.Floor((double)Location.y / _sudoku.BoxHeight));
+        => _sudoku.Box((byte)Math.Floor((double)Location.x / _sudoku.BoxWidth), 
+            (byte)Math.Floor((double)Location.y / _sudoku.BoxHeight));
 
     public override string ToString()
     {
         return $"{Value} : {Location}";
     }
+
+    public override int GetHashCode() => Location.x ^ Location.y;
 }
