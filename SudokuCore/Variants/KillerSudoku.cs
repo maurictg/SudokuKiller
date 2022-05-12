@@ -7,4 +7,6 @@ public class KillerSudoku : Sudoku
         var sudoku = new Sudoku();
         return sudoku;
     }
+    
+    
 }

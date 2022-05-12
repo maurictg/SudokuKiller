@@ -73,6 +73,7 @@ public class BacktrackWithForwardCheckSolver : ISudokuSolver
                 if (SolveBacktrack())
                     return true;
 
+                _backtracks++;
                 cell.Value = 0;
             }
         }
@@ -87,6 +88,6 @@ public class BacktrackWithForwardCheckSolver : ISudokuSolver
         if(!SolveBacktrack())
             throw new ArgumentException("Sudoku could not be solved: No solution exists");
 
-        Console.WriteLine($"Found BackTrack solution in {sw.Elapsed} and {_checks} checks + {_emptyChecks} empty checks, with {_backtracks} backtracks and {_forwardChecks} cells forward checked");
+        Console.WriteLine($"Found BackTrack/ForwardCheck solution in {sw.Elapsed} and {_checks} checks + {_emptyChecks} empty checks, with {_backtracks} backtracks and {_forwardChecks} cells forward checked");
     }
 }
