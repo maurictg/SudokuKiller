@@ -1,16 +1,12 @@
 namespace SudokuCore;
 
-public struct Cell
+public struct Cell : ICloneable
 {
-    private Sudoku _sudoku;
+    private readonly Sudoku _sudoku;
     public (byte x, byte y) Location { get; }
 
     public bool IsEmpty => Value == 0;
-
-    public void SetRef(Sudoku s)
-    {
-        _sudoku = s;
-    }
+    public List<byte> RemainingValues { get; }
 
     public byte Value
     {
@@ -19,7 +15,7 @@ public struct Cell
     }
 
     public Cell(Sudoku sudoku, (byte x, byte y) location)
-        => (Location, _sudoku) = (location, sudoku);
+        => (Location, _sudoku, RemainingValues) = (location, sudoku, new List<byte>(sudoku.Size));
 
     public bool Accepts(byte value)
     {
@@ -59,6 +55,13 @@ public struct Cell
     public override string ToString()
     {
         return $"{Value} : {Location}";
+    }
+
+    public object Clone()
+    {
+        var clone = new Cell(_sudoku, Location);
+        clone.RemainingValues.AddRange(RemainingValues);
+        return clone;
     }
 
     public override int GetHashCode() => Location.x ^ Location.y;

@@ -167,7 +167,16 @@ public class Sudoku : ICloneable, IDisposable
 
     public object Clone()
     {
-        return FromString(ToSingleLine());
+        var clone = new Sudoku(Size);
+        foreach (var c in GetCells().Where(x => !x.IsEmpty))
+        {
+            clone.Map[c.Location.x, c.Location.y] = c.Value;
+        }
+
+        foreach (var r in Regions)
+            clone.Regions.Add(r);
+
+        return clone;
     }
 
     public void Dispose()

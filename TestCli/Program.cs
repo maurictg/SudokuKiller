@@ -1,8 +1,10 @@
 ﻿using SudokuCore;
 using SudokuCore.Solvers;
+using SudokuCore.Solvers.DancingLinks;
 using SudokuCore.Variants;
 
 
+/*
 var killer = new Sudoku();
 Console.WriteLine(killer);
 
@@ -36,18 +38,16 @@ killer.Regions.Add(new KillerRegion(killer, 15, (7,5), (7,6)));
 killer.Regions.Add(new KillerRegion(killer, 13, (8,4), (8,5), (8,6)));
 killer.Regions.Add(new KillerRegion(killer, 17, (8,7), (8,8)));
 
-Console.WriteLine("Hello!");
+Console.WriteLine("Hello!");*/
 
-var sudoku = Sudoku.FromString("8..........36......7..9.2...5...7.......457.....1...3...1....68..85...1..9....4..");
-var sudoku2 = Sudoku.FromString(sudoku.ToSingleLine());
-var bts = new OptimizedBacktrackSolver(sudoku);
+var sudoku = Sudoku.FromString("........82.1.........9..673....5....9.7..3.41....7.....5....289.....5...36..4....");
+Console.WriteLine(sudoku);
+
+var bts = new DancingLinksSolver(sudoku);
 bts.Solve();
 
 Console.WriteLine(sudoku);
-
-var bts2 = new BacktrackSolver(sudoku2);
-bts2.Solve();
-Console.WriteLine(sudoku2);
+Console.WriteLine(SudokuRules.CheckIfSudokuValid(sudoku));
 
 // 8..........36......7..9.2...5...7.......457.....1...3...1....68..85...1..9....4..
 // 812753649943682175675491283154237896369845721287169534521974368438526917796318452*/
@@ -56,3 +56,5 @@ Console.WriteLine(sudoku2);
 
 // Not solvable w/ backtracking or brute-force:
 //..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9
+
+//........82.1.........9..673....5....9.7..3.41....7.....5....289.....5...36..4....
