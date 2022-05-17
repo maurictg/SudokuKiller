@@ -56,6 +56,6 @@ public class BruteForceSolver : ISudokuSolver
         if (!SolveCell(0, 0))
             throw new ArgumentException("Sudoku could not be solved: No solution exists");
         
-        Console.WriteLine($"Found BruteForce solution in {sw.Elapsed} and {_checks} tries");
+        Console.WriteLine($"Found BruteForce solution in {sw.Elapsed} - {sw.ElapsedMilliseconds}ms and {_checks} tries");
     }
 }

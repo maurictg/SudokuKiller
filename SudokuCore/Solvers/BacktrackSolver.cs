@@ -68,6 +68,6 @@ public class BacktrackSolver : ISudokuSolver
         if(!SolveBacktrack())
             throw new ArgumentException("Sudoku could not be solved: No solution exists");
 
-        Console.WriteLine($"Found BackTrack solution in {sw.Elapsed} and {_checks} checks + {_emptyChecks} empty checks, with {_backtracks} backtracks");
+        Console.WriteLine($"Found BackTrack solution in {sw.Elapsed} - {sw.ElapsedMilliseconds}ms and {_checks} checks + {_emptyChecks} empty checks, with {_backtracks} backtracks");
     }
 }

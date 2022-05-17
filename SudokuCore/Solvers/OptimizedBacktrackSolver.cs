@@ -146,6 +146,6 @@ public class OptimizedBacktrackSolver : ISudokuSolver
         if(!SolveBacktrack(matrix))
             throw new ArgumentException("Sudoku could not be solved: No solution exists");
 
-        Console.WriteLine($"Found BackTrack-optimized solution in {sw.Elapsed} and {_checks} checks + {_forwardCellUpdates} forward-updates with {_backtracks} backtracks and {_emptySearches} empty checks");
+        Console.WriteLine($"Found BackTrack-optimized solution in {sw.Elapsed} - {sw.ElapsedMilliseconds}ms and {_checks} checks + {_forwardCellUpdates} forward-updates with {_backtracks} backtracks and {_emptySearches} empty checks");
     }
 }

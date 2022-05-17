@@ -1,10 +1,8 @@
-﻿using SudokuCore;
+﻿using System.Diagnostics;
+using SudokuCore;
 using SudokuCore.Solvers;
-using SudokuCore.Solvers.DancingLinks;
 using SudokuCore.Variants;
 
-
-/*
 var killer = new Sudoku();
 Console.WriteLine(killer);
 
@@ -38,16 +36,11 @@ killer.Regions.Add(new KillerRegion(killer, 15, (7,5), (7,6)));
 killer.Regions.Add(new KillerRegion(killer, 13, (8,4), (8,5), (8,6)));
 killer.Regions.Add(new KillerRegion(killer, 17, (8,7), (8,8)));
 
-Console.WriteLine("Hello!");*/
-
-var sudoku = Sudoku.FromString("........82.1.........9..673....5....9.7..3.41....7.....5....289.....5...36..4....");
-Console.WriteLine(sudoku);
-
-var bts = new DancingLinksSolver(sudoku);
+var bts = new OptimizedBacktrackSolver(killer);
 bts.Solve();
 
-Console.WriteLine(sudoku);
-Console.WriteLine(SudokuRules.CheckIfSudokuValid(sudoku));
+Console.WriteLine(killer);
+Debug.Assert(SudokuRules.CheckIfSudokuValid(killer));
 
 // 8..........36......7..9.2...5...7.......457.....1...3...1....68..85...1..9....4..
 // 812753649943682175675491283154237896369845721287169534521974368438526917796318452*/
